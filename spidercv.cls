@@ -285,12 +285,12 @@
 \newcounter{var}
 \newenvironment{SpiderDiagram}[2]{ % Axes color, Highlight color
     \def\n{\thespidercount}
-    \def\N{10}
+    \def\N{20}
     \def\nC{#1}
     \def\hC{#2}
     \vspace*{0.15cm}
 }{
-    \begin{tikzpicture}[scale=0.175]
+    \begin{tikzpicture}[scale=0.0875]
         \foreach \x in{1,2,...,\n}{
             \setcounter{var}{360/\n*\x}
             \ifthenelse{\thevar = 180 \OR \thevar = 360}{
