@@ -116,7 +116,15 @@
 
 \newlength\margin
 \setlength\margin{0.15cm}
-\usepackage[margin=\margin,noheadfoot,a4paper, paperheight=1700pt]{geometry}
+% Height of the main (experience) area; the footer starts right below it.
+% Increase this when the experience section grows - the page grows with it.
+\newlength\mainheight
+\setlength\mainheight{63.5cm}
+\newlength\footerheight
+\setlength\footerheight{1700pt-46.5cm-3.5cm}
+\newlength\cvpaperheight
+\setlength\cvpaperheight{\mainheight+\footerheight}
+\usepackage[margin=\margin,noheadfoot,a4paper, paperheight=\cvpaperheight]{geometry}
 \newlength\sidewidth
 \setlength\sidewidth{0.25\paperwidth-2\margin}
 \newlength\mainwidth
@@ -129,7 +137,12 @@
 \setlength\profilesize{\sidewidth-2\margin}
 
 \newlength\sidebarbottom
-\setlength\sidebarbottom{-46.5cm }
+\setlength\sidebarbottom{-\mainheight}
+
+% Sidebar content is stretched to fill the whole tan area:
+% use \vspace{... plus 1fill} between sidebar sections.
+\newlength\sidebarheight
+\setlength\sidebarheight{\mainheight-\topheight-3\margin+0.4cm-0.6cm}
 
 \newlength\footerwidth
 \setlength\footerwidth{\paperwidth-6\margin}
@@ -168,11 +181,12 @@
     %%%%%%%%%%%%%
     % \TPmargin{}{}
     \begin{textblock*}{\sidewidth}(\margin,\topheight + 3\margin -0.4cm)
+    \begin{minipage}[t][\sidebarheight][s]{\sidewidth}
     \begin{center}
     \color{#2}
-    % Please use vspace to verticaly align manually your content
 }{
     \end{center}
+    \end{minipage}
     \end{textblock*}
 }
 
