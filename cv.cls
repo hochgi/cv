@@ -104,7 +104,7 @@
 \newlength\mainheight
 \setlength\mainheight{26.4cm}
 \newlength\footerheight
-\setlength\footerheight{42.4cm}
+\setlength\footerheight{38.3cm}
 \newlength\cvpaperheight
 \setlength\cvpaperheight{\mainheight+\footerheight}
 \usepackage[margin=\margin,noheadfoot,a4paper, paperheight=\cvpaperheight]{geometry}
