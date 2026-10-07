@@ -1,24 +1,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Spider CV
+% CV
 % LaTeX Class
-% Version 1.1 (08/10/22)
 %
-% Name like this because of the spider chart widget.
-% 
-% Authors:
-% ROMAINPC
+% Adapted from Spider CV v1.1 (08/10/22) by ROMAINPC,
+% with the spider chart and other unused widgets removed.
+%
+% Spider CV was:
 % Inspired by developercv (Jan Vorisek)
 % Inspired by developercv Doji variant (Stijn Dejongh)
 % Inspired by limecv (Olivier Pieters)
 % Inspired by altacv (LianTze Lim)
 %
 % License:
-% The MIT License (see included LICENSE file)
+% The MIT License
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{spidercv}[03/01/2022]
+\ProvidesClass{cv}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{extarticle}} % Pass through any options to the base class
 \ProcessOptions\relax % Process given options
@@ -31,11 +30,9 @@
 
 \setlength{\parindent}{0mm} % Suppress paragraph indentation
 \usepackage[hidelinks]{hyperref} % Required for links but hide the default boxes around links
-\newcommand{\lorem}{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.} % Dummy text
 \pagestyle{empty} % No headers or footers
 \usepackage{moresize} % Provides more font size commands (\HUGE and \ssmall)
 \usepackage{fontawesome} % fontawesome
-\usepackage{ifthen}
 
 %----------------------------------------------------------------------------------------
 %	COLORS
@@ -47,27 +44,11 @@
 \definecolor{MidGrey}{HTML}{A0A0A0}
 \definecolor{VeryLightOrange}{HTML}{FFFCE8}
 \definecolor{MainGrey}{HTML}{333333}
-\definecolor{BookmarkGrey}{HTML}{8F867D}
 \definecolor{MainOrange}{HTML}{FF8000}
 \definecolor{SecondaryOrange}{HTML}{FFB01C}
 \definecolor{LinkCyan}{HTML}{40C0E0}
 \definecolor{Gareyish}{HTML}{506266} 
 
-\definecolor{Sandbox0}{HTML}{E6DB74} % class name
-\definecolor{Sandbox1}{HTML}{A05000} % dark orange (unused?)
-\definecolor{Sandbox2}{HTML}{837A71} % greyish (red tint?)
-\definecolor{Sandbox3}{HTML}{C0C0C0} % ccc grey
-\definecolor{Sandbox4}{HTML}{0083BF} % number's blue 1?
-\definecolor{Sandbox5}{HTML}{0086B3} % number's blue 2?
-\definecolor{Sandbox6}{HTML}{BAB5B0} % light grey
-\definecolor{Sandbox7}{HTML}{303030} % darker grey (background)
-\definecolor{Sandbox8}{HTML}{75715E} % comment greyish
-\definecolor{Sandbox9}{HTML}{FFC880} % light orange 
-\definecolor{SandboxA}{HTML}{00A0A0} % teal  
-\definecolor{SandboxB}{HTML}{005AC3} % number's blue 3?
-\definecolor{SandboxC}{HTML}{FFA020} % similar to SecondaryOrange
-\definecolor{SandboxD}{HTML}{0E82C7} % number's blue 4?
-\definecolor{SandboxE}{HTML}{EFEFEF} % even lighter grey
 
 %%%%% color macros, use it at the beginning of your cv to quickly use the enterprise colors (Pro HRD tips)
 \newcommand{\DefineColorMacros}[5]{% COLORS : TextSide / TextMain / HighLight / Background /Other
@@ -116,12 +97,14 @@
 
 \newlength\margin
 \setlength\margin{0.15cm}
-% Height of the main (experience) area; the footer starts right below it.
-% Increase this when the experience section grows - the page grows with it.
+% Page height = \mainheight + \footerheight; tune both when the content changes.
+% \mainheight: the sidebar (and the main column next to it) ends here; the
+%              full-width footer area starts right below it.
+% \footerheight: height of the full-width area below the sidebar.
 \newlength\mainheight
-\setlength\mainheight{63.5cm}
+\setlength\mainheight{26.4cm}
 \newlength\footerheight
-\setlength\footerheight{1700pt-46.5cm-3.5cm}
+\setlength\footerheight{42.4cm}
 \newlength\cvpaperheight
 \setlength\cvpaperheight{\mainheight+\footerheight}
 \usepackage[margin=\margin,noheadfoot,a4paper, paperheight=\cvpaperheight]{geometry}
@@ -142,7 +125,7 @@
 % Sidebar content is stretched to fill the whole tan area:
 % use \vspace{... plus 1fill} between sidebar sections.
 \newlength\sidebarheight
-\setlength\sidebarheight{\mainheight-\topheight-3\margin+0.4cm-0.6cm}
+\setlength\sidebarheight{\mainheight-\topheight-3\margin+0.4cm-0.3cm}
 
 \newlength\footerwidth
 \setlength\footerwidth{\paperwidth-6\margin}
@@ -268,90 +251,9 @@
     \Large{#4}}
 }
 
-%%%%%%%%% Side bar
-
-%%% Spider chart
-\usepackage{xparse}
-\newcounter{spidercount}
-\ExplSyntaxOn
-\NewDocumentCommand{\newList}{m}
- {
-  \seq_new:c { l_kees_list_#1_seq }
- }
-\NewDocumentCommand{\addToList}{mm}
- {
-  \seq_put_right:cn { l_kees_list_#1_seq } { #2 }
- }
-\NewDocumentCommand{\getFromList}{mm}
- {
-  \seq_item:cn { l_kees_list_#1_seq } { #2 }
- }
-\ExplSyntaxOff
-\newList{skilllist}
-\newList{masterlist}
-
-\newcommand{\addSkill}[2]{ % Skill label, Strenght
-    \stepcounter{spidercount}
-    \addToList{skilllist}{#1}
-    \addToList{masterlist}{#2}
-}
-
-\newcounter{var}
-\newenvironment{SpiderDiagram}[2]{ % Axes color, Highlight color
-    \def\n{\thespidercount}
-    \def\N{20}
-    \def\nC{#1}
-    \def\hC{#2}
-    \vspace*{0.15cm}
-}{
-    \begin{tikzpicture}[scale=0.0875]
-        \foreach \x in{1,2,...,\n}{
-            \setcounter{var}{360/\n*\x}
-            \ifthenelse{\thevar = 180 \OR \thevar = 360}{
-                \draw [draw=\nC, very thick] (0,0)--(\thevar:\N) node
-                [shift=(\thevar+250:-10pt),
-                color=\hC] {\ssmall\getFromList{skilllist}{\x}}
-            }
-            {
-                \draw [draw=\nC, very thick] (0,0)--(\thevar:\N) node
-                [shift=(\thevar:10pt),
-                color=\hC] {\ssmall\getFromList{skilllist}{\x}}
-            }
-            ;
-        }
-        \newcounter{temp}
-        \newcounter{tempbis}
-        \foreach[count=\x] \y in{2,3,...,\n}{
-            \setcounter{temp}{\getFromList{masterlist}{\x}}
-            \setcounter{tempbis}{\getFromList{masterlist}{\y}}
-            \draw [draw=\hC,  very thick]
-                (360/\n*\x:\thetemp) -- (360/\n*\x+360/\n:\thetempbis);
-        }
-        \setcounter{temp}{\getFromList{masterlist}{\n}}
-        \setcounter{tempbis}{\getFromList{masterlist}{1}}
-        \draw [draw=\hC,  very thick]
-            (360:\thetemp) -- (360+360/\n:\thetempbis);
-
-
-    \end{tikzpicture}
-}
-
-
 %%%%%%%%%%%%%% Main part
 
 %%%%%% Section title
-\newcommand{\MainTitleBis}[4]{%Background color, Highlight color, Left text, Right text
-    \begin{tikzpicture}[baseline]
-        \def\backcolor{\ifx\PM\undefined#1\else LightGrey\fi}    
-        \node[draw=#2,rounded corners,fill=\backcolor,inner sep=3pt, very thick, anchor=west]
-        at (0,0) (box1)
-            {\textbf{\Large\color{#2}#3}};
-        \node[draw=#2,rounded corners,fill=\backcolor,inner sep=3pt, very thick, anchor=east]
-        at (\textwidth,0) (square)
-        {\textbf{\Large\color{#2}#4}};
-        \draw [very thick, draw=#2, inner sep=0pt] (box1) -- (square);
-    \end{tikzpicture}\\
-}
 \newcommand{\MainTitle}[3]{%Background color, Highlight color, Title text
     \begin{tikzpicture}[baseline]    
             \def\backcolor{\ifx\PM\undefined#1\else LightGrey\fi}  
@@ -376,18 +278,9 @@
 }
 
 
-
-
 %%%%%% Common tools
 
 %%% Text separators
-
-\newcommand{\TextSeparator}[2]% Highlight color, Text
-{
-    \noindent\makebox[\linewidth]{{\color{#1}\hrulefill}
-    \hspace{1ex}\raisebox{-.4ex}{\textbf{\large{#2}}}
-    \hspace{1ex}{\color{#1}\hrulefill}}
-}
 
 \newcommand{\TextSeparatorBis}[3]% Highlight color, Left text, Right text
 {
@@ -415,19 +308,6 @@
     \begin{description}}
   {\end{description}}
 
-
-%%% DoubleColumns
-\newenvironment{DoubleColumns}{
-    %%%%%%%%% Use this command to split
-    \newcommand{\nextcolumn}{\end{center}\end{minipage}\hfill\begin{minipage}[t]{0.5\textwidth-0.5\margin}\begin{center}}
-
-    \begin{minipage}[t]{0.5\textwidth-0.5\margin}
-    \begin{center}
-}{
-    \end{center}
-    \end{minipage}\\\vspace*{0.15cm}
-}
-
 %%% TripleColumns
 \newenvironment{TripleColumns}{
     %%%%%%%%% Use this command to split
@@ -438,22 +318,4 @@
 }{
     \end{center}
     \end{minipage}\\\vspace*{0.15cm}
-}
-
-%%% Label
-\newcommand{\Label}[2]{% Highlight color, Text
-    \tikz[baseline]\node[anchor=base,draw=#1,fill=LightGrey,rounded corners,inner xsep=1ex,inner ysep =0.75ex,text height=1.5ex,text depth=.25ex, thick]{#2};
-}
-
-
-
-%%% Skill Gauges
-\newenvironment{SkillGauges}[1]{% Highlight color
-    \def\highlightColor{\color{#1}}
-    \begin{tabular}{l l}
-}{
-    \end{tabular}
-}
-\newcommand{\addGauge}[3][\faSquareO]{% Optional fa symbol | Text | Number of symbols
-    #2 & \foreach \i in{1,...,#3}{\highlightColor#1\space} \\
 }
