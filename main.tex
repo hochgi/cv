@@ -1,32 +1,6 @@
 \documentclass[10pt]{cv}
 
-% \usepackage[hmargin=0.5cm, vmargin=0.125cm]{geometry} % Document margins
-\usepackage{fontawesome} % Required for symbols in the colored box
-\usepackage{amssymb} % \mathbb{X} doubles as the X (formerly Twitter) logo
-% \usepackage[usenames,dvipsnames]{xcolor} % Allows the definition of hex colors
-
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-
-% Colors for links, text and headings
-\usepackage{hyperref}
-
-\hypersetup{colorlinks,breaklinks, urlcolor=LinkCyan, linkcolor=LinkCyan} % Set up links and colors
-
-% \usepackage{fancyhdr}
-% \pagestyle{fancy}
-% \fancyhf{}
-
-
-% \renewcommand{\headrulewidth}{0pt} % Get rid of the default rule in the header
-
-\usepackage{titlesec} % Allows creating custom \section's
-\usepackage{adforn} % Ornaments
-
-\usepackage[export]{adjustbox}
 \usepackage{pdfcomment}
-
-\titlespacing{\section}{0pt}{0pt}{5pt} % Spacing around titles
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                     %%
@@ -51,8 +25,8 @@
 
 % {post path}{utm_medium}{text}
 % e.g: \bloglink{2019/03/trick-or-trait.html}{extras-sidebar}{text to displayed (passed to href as is)}
-\newcommand{\bloglink}[3][]{
-    \href{https://blog.hochgi.com/#1?utm_source=cv&utm_medium=#2&utm_campaign=bonus_points_for_checking_my_blog&utm_content=\uniquecampaign}{#3}
+\newcommand{\bloglink}[3][]{%
+    \href{https://blog.hochgi.com/#1?utm_source=cv&utm_medium=#2&utm_campaign=bonus_points_for_checking_my_blog&utm_content=\uniquecampaign}{#3}%
 }
 
 % Key term (tech, skill or domain) highlighted in the text
@@ -60,306 +34,160 @@
 
 \begin{document}
 
-    %%%%%%% Printable mode
-    \PrintableMode
+    %----------------------------------------------------------------------------------------
+    %	SIDEBAR (page 1)
+    %----------------------------------------------------------------------------------------
+    \Sidebar{img/me.jpeg}{%
+
+        \SideSection{Contact}
+        \ContactItem{\faMapMarker}{Rehovot, Israel}
+        \ContactItem{\faPhone}{+972 58 620 4060}
+        \ContactItem{\faEnvelope}{\href{mailto:giladhoch@gmail.com}{giladhoch@gmail.com}}
+        \ContactItem{\faLinkedin}{\href{https://www.linkedin.com/in/gilad-hoch-6632a138}{in/gilad-hoch-6632a138}}
+        \ContactItem{\faGithub}{\href{https://github.com/hochgi}{github.com/hochgi}}
+        \ContactItem{\faRss}{\bloglink{top-header}{blog.hochgi.com}}
+        \ContactItem{\faStackOverflow}{\href{https://stackoverflow.com/users/896557/gilad-hoch}{Stack Overflow}}
+
+        \SideSection{Education}
+        \Degree{B.Sc. in Computer Science}{Bar-Ilan University}{2009 -- 2012}
+               {Microsoft Excellence Program scholarship; member of BURST, Israel's first RoboCup senior-league team.}
+        \Degree{Graduate studies in CS}{Bar-Ilan University}{2012 -- 2015}
+               {M.Sc. track (not completed): algorithms, data structures \& complexity.}
+        \Degree{Microsoft Excellence Program}{Microsoft R\&D, Herzliya}{2009 -- 2012}{}
+
+        \SideSection{Talks}
+        \ContactItem{\faYoutubePlay}{\href{https://youtu.be/P21eSH2-0HY}{Concurrent Scala}}
+        \ContactItem{\faYoutubePlay}{\href{https://youtu.be/pB7EMXtfQUY}{Parsing - beyond regex}}
+        {\footnotesize\color{Muted}Most talks aren't recorded; some exist as slides only, e.g.
+            \href{https://hochgi.github.io/how-to-ai-in-versatile/}{How to AI in Versatile} and
+            \href{https://docs.google.com/presentation/d/1lweerpmM9owiQNuImpmT9ROU4zRlym_jIdzbVkLJ-JQ/edit?usp=sharing}{Component Testing}.}
+
+        \SideSection{Open source}
+        \ContactItem{\faGithub}{\href{https://github.com/hochgi?tab=repositories&sort=stargazers}{My repositories}}
+        \ContactItem{\faGithub}{\href{https://github.com/hochgi/test-kit}{test-kit}}
+        \ContactItem{\faGithub}{Contributions to \href{https://github.com/pulls?utf8=\%E2\%9C\%93&q=is\%3Apr+author\%3Ahochgi+org\%3Aakka}{Akka} \&
+                                \href{https://github.com/pulls?utf8=\%E2\%9C\%93&q=is\%3Apr+author\%3Ahochgi+org\%3Azio}{ZIO}}
+        \ContactItem{\faGithubSquare}{\href{https://api.github.com/search/issues?q=author\%3Ahochgi+type\%3Apr&per_page=100&page=1}{All my PRs}\footnote{\raggedright
+            API link, 100 results per page. A little
+            \pdftooltip{\texttt{\textcolor{Accent}{jq}}~\&~\texttt{\textcolor{Accent}{bash}}~magic}{
+                cat <(jq '.items\\[\\]' page1.json) <(jq '.items\\[\\]' page2.json) <(jq '.items\\[\\]' page3.json) | jq -sr 'map(.repository\_url)\\[\\]' | awk -F/ '\{print \$5\}' | sort | uniq
+            } over all pages lists the orgs: \emph{akka, CM-Well, coursier, eclipse-rdf4j, OpenAPITools, playframework, sbt, scala, stryker-mutator, zio, \dots}}}
+    }
 
     %----------------------------------------------------------------------------------------
-    %	TOP BAR
+    %	HEADER
     %----------------------------------------------------------------------------------------
-    \begin{TopBar}{\ColorTextSide}
-        \Name{\ColorHighlight}{\textit{Gilad Hoch}}{\small\color{MainOrange}Backend \& AI Tech Lead}{\small\color{MainOrange}\today}
+    \Header{Gilad Hoch}{Backend \& AI Tech Lead}
 
-        %%% Contact
-        \SimpleSeparator{\ColorHighlight}
-        \RaggedRight\small{
-            \textbf{About me:} Backend engineer and tech lead with 14+ years of experience in \kw{distributed systems}, \kw{big data} and \kw{API design},
-            now leading AI engineering: agents, harnesses, and making AI-assisted development reliable \emph{and} affordable.
-            Thorough, opinionated about how software should be built, and always happy to be proven wrong.
-        }
-
-        \SimpleSeparator{\ColorHighlight}
-        \begin{TripleColumns}
-            \begin{ItemList}{\ColorHighlight}
-                \item [\Large\faEnvelopeO]      \href{mailto:giladhoch@gmail.com}{giladhoch@gmail.com} % Email address
-                \item [\Large\faPhone]          +972 58 6204060 % Phone
-                \item [\Large\faLinkedinSquare] \href{https://www.linkedin.com/in/gilad-hoch-6632a138}{LinkedIn profile} % Linkedin
-            \end{ItemList}
-            \nextcolumn
-            \begin{ItemList}{\ColorHighlight}
-                \item [\Large\faLaptop]    \bloglink{top-header}{blog.hochgi.com}                 % Website
-                \item [\Large\faGithub]    \href{https://github.com/hochgi}{github.com/hochgi} \\  % Github
-            \end{ItemList}
-            \nextcolumn
-            \begin{ItemList}{\ColorHighlight}
-                \item [\Large$\mathbb{X}$]     \href{https://x.com/hochgi}{X profile}                                 % X (formerly Twitter)
-                \item [\Large\faStackExchange] \href{https://stackexchange.com/users/482262/gilad-hoch?tab=accounts}{Stack Exchange profile} % Stackexchange
-                \item [\Large\faStackOverflow] \href{https://stackoverflow.com/users/896557/gilad-hoch}{Stack Overflow profile} % Stackoverflow
-            \end{ItemList}
-        \end{TripleColumns}
-
-    \end{TopBar}
-
-
+    Backend engineer and tech lead with 14+ years of experience in \kw{distributed systems}, \kw{big data} and \kw{API design},
+    now leading AI engineering: agents, harnesses, and making AI-assisted development reliable \emph{and} affordable.
+    Thorough, opinionated about how software should be built, and always happy to learn something new.
 
     %----------------------------------------------------------------------------------------
-    %	SIDE BAR
+    %	EXPERIENCE
     %----------------------------------------------------------------------------------------
-    % Sections are separated with \vspace{... plus 1fill}, so the content
-    % stretches to fill the whole sidebar area (its height is set by \mainheight).
-    \begin{SideBar}{\ColorBackground}{\ColorTextSide}
+    \Section{Experience}
 
-        %%% Personal Info
-        \TextSeparatorBis{\ColorHighlight}{\faCaretRight \hspace{1pt} Personal Info}{}
+    %%%%%%%%%%%%%
+    % Versatile %
+    %%%%%%%%%%%%%
+    \Company{Versatile}{Feb 2025 -- Present}
 
-        \begin{tabular}{@{}r@{\hspace{3pt}}l@{}}
-            \ssmall\textsc\textbf{\underline{address:}}          & \small Haim Kaufman 8, \\ & \small apt. 35, Rehovot, IL \\[1ex]
-            \ssmall\textsc\textbf{\underline{family status:}}    & \small Married +4 \\[1ex]
-            \ssmall\textsc\textbf{\underline{date of birth:}}    & \small 15 Aug 1984 \\[1ex]
-            \ssmall\textsc\textbf{\underline{military service:}} & \small Medic in combat \\ & \small engineering, 2003-06; \\ & \small reserves until 2023 \\
-        \end{tabular}
+    \Role{AI Tech Lead}{Aug 2026 -- Present}
+    Leading the company's AI initiatives: agentic coding infrastructure, AI tooling and \kw{AI cost optimization}.
+    Started in early 2026 as a side initiative alongside my backend work; a formal role since Aug 2026.
+    \begin{Highlights}
+        \item Built \emph{Van Damme}, a Slack-summoned general-purpose \kw{AI agent} that authored 250+ PRs and reviewed 330+
+              across 30+ repositories within months, becoming part of everyday work across the company. It debugs, analyzes data,
+              and opens \& reviews PRs, through specialized agents with their own skills, tools and integrations
+              (GitHub, Jira, Databricks, HubSpot, Notion, Coralogix, the company ERP and more).
+        \item Cut monthly AI spend almost 10$\times$ on a reference seat while doing more than double the work: a central \kw{LiteLLM}
+              gateway with per-user keys \& cost reporting routes the grind to cheaper models (xAI Grok, valarhq.ai, Bedrock)
+              and keeps frontier models for judgment, backed by a seat policy across tools.
+        \item Introduced \kw{harness engineering}: a five-phase spec-to-ship \kw{agent pipeline} (spec, red tests, code to green, review, verify)
+              with per-phase permissions, so no agent grades its own homework. Rolled it out to key repositories, coached teams to adopt it,
+              and kept it in sync across \kw{Claude Code}, \kw{Cursor} \& \kw{OpenCode} via generated configs and a drift-checking pre-push hook.
+        \item Evangelized AI adoption through Slack channels, tech talks and mentoring.
+    \end{Highlights}
 
-        \vspace{2ex plus 1fill}
+    \Role{Sr. Backend Engineer}{Feb 2025 -- Present}
+    Joined the backend team (\kw{node.js} / \kw{TypeScript} microservices), took ownership of the reporting \& widgets domain,
+    and continue hands-on backend work alongside the AI role.
+    \begin{Highlights}
+        \item Took PagerDuty alerts from almost daily to none and retired Power BI (and its licensing costs) by designing and leading the sunset
+              of the legacy reports pipeline, a screenshot-based flow wired into many services. Replaced it with native on-demand widgets,
+              now live in the web app and mobile clients.
+        \item Created \href{https://github.com/hochgi/test-kit}{\emph{test-kit}} (open-sourced), a \kw{component-testing} framework for \kw{TypeScript}
+              services adopted across the backend: test doubles with probes that fully control them, backed by in-memory \kw{Postgres}, \kw{MySQL},
+              \kw{Redis}, \kw{S3}, \kw{SQS} \& \kw{Kafka}. Also wrote the \texttt{/component-testing} agent skill that makes proper component
+              testing the easy path for humans and agents alike.
+    \end{Highlights}
 
-        %%% Languages
-        \TextSeparatorBis{\ColorHighlight}{\faCaretRight \hspace{1pt} Languages}{}
+    %%%%%%%%%%%
+    % Hunters %
+    %%%%%%%%%%%
+    \Company{Hunters}{Aug 2023 -- Feb 2025}
 
-        {\textcolor{LinkCyan}{\faGlobe}}~Hebrew \hspace{2em} {\textcolor{LinkCyan}{\faGlobe}}~English
-
-        \vspace{2ex plus 1fill}
-
-        %%% Courses & Certifications
-        \TextSeparatorBis{\ColorHighlight}{\faCaretRight \hspace{1pt} Courses}{}
-
-        \begin{minipage}[t]{0.98\textwidth}
-            \raggedright\footnotesize
-            Functional Programming Principles in Scala \\ {\color{MidGrey}\emph{(Coursera, 2012)}} \\[0.6ex]
-            Principles of Reactive Programming         \\ {\color{MidGrey}\emph{(Coursera, 2015)}} \\[0.6ex]
-            Parallel Programming                       \\ {\color{MidGrey}\emph{(Coursera, 2016)}} \\[0.6ex]
-            Big Data Analysis with Scala and Spark     \\ {\color{MidGrey}\emph{(Coursera, 2022)}} \\[0.6ex]
-            Enterprise Analytics with Apache Spark     \\ {\color{MidGrey}\emph{(DataStax Academy, 2022)}}
-        \end{minipage}
-
-        \vspace{2ex plus 1fill}
-
-        %%% Extras
-        \TextSeparatorBis{\ColorHighlight}{\faCaretRight \hspace{1pt} Extras}{}
-
-        \begin{minipage}[t]{0.98\textwidth}
-            \raggedright
-            \faRss~\bloglink{extras-sidebar}{Personal Blog} \\[1.5ex]
-            Talks\footnote{Most aren't recorded or published openly; some exist as slides only, e.g.
-                \href{https://hochgi.github.io/how-to-ai-in-versatile/}{How to AI in Versatile} and
-                \href{https://docs.google.com/presentation/d/1lweerpmM9owiQNuImpmT9ROU4zRlym_jIdzbVkLJ-JQ/edit?usp=sharing}{Component Testing}.}: \\[0.3ex]
-            \small
-            \hspace{1em}\faYoutubePlay~\href{https://youtu.be/P21eSH2-0HY}{Concurrent Scala} \\
-            \hspace{1em}\faYoutubePlay~\href{https://youtu.be/pB7EMXtfQUY}{Parsing - beyond regex} \\[1.2ex]
-            \normalsize
-            OSS contribs (highlights): \\[0.5ex]
-            \small
-            \hspace{1em}\faGithub~\href{https://github.com/hochgi?tab=repositories&sort=stargazers}{My repositories} \\
-            \hspace{1em}\faGithub~\href{https://github.com/hochgi/test-kit}{test-kit} \\
-            \hspace{1em}\faGithub~\href{https://github.com/pulls?utf8=\%E2\%9C\%93&q=is\%3Apr+author\%3Ahochgi+org\%3Aakka}{Akka} \\
-            \hspace{1em}\faGithub~\href{https://github.com/pulls?utf8=\%E2\%9C\%93&q=is\%3Apr+author\%3Ahochgi+org\%3Azio}{ZIO} \\
-            \hspace{1em}\faGithubSquare~\href{https://api.github.com/search/issues?q=author\%3Ahochgi+type\%3Apr&per_page=100&page=1}{Full List}\footnote{
-                API link, 100 results per page. A little
-                \pdftooltip{\texttt{\textcolor{MainOrange}{jq}}~\&~\texttt{\textcolor{MainOrange}{bash}}~magic}{
-                    cat <(jq '.items\\[\\]' page1.json) <(jq '.items\\[\\]' page2.json) <(jq '.items\\[\\]' page3.json) | jq -sr 'map(.repository\_url)\\[\\]' | awk -F/ '\{print \$5\}' | sort | uniq
-                } over all pages lists the orgs: \emph{akka, CM-Well, coursier, eclipse-rdf4j, OpenAPITools, playframework, sbt, scala, stryker-mutator, zio, \dots}}
-            \vspace*{0.5ex}
-        \end{minipage}
-
-    \end{SideBar}
-
-
+    \Role{Tech Lead}{}
+    Mentored the team and provided technical guidance, focusing on ingestion \& detection. Played a key role in stabilizing a complex
+    health monitoring system, resolving major \kw{concurrency} issues and cutting metrics reporting time from \emph{minutes} to single-digit
+    \emph{milliseconds}; built a live visualization of alerting metrics that significantly shortened root-cause investigations; introduced
+    \kw{OpenAPI} documentation with auto-generated clients; and led a \kw{Spark} upgrade with an overhaul of the build \& packaging process.
+    Became the technical focal point for multiple \kw{Scala} \& \kw{ZIO} services, simplifying and documenting them so the team could change them with confidence.
 
     %----------------------------------------------------------------------------------------
-    %	Picture
+    %	PAGE 2+: full width
     %----------------------------------------------------------------------------------------
-    \DefineProfile{\ColorOther}{\ColorTextSide}{img/me.jpeg}
+    \NextPages
 
+    %%%%%%%%%%%%%%%
+    % SparkBeyond %
+    %%%%%%%%%%%%%%%
+    \Company{SparkBeyond}{Jan 2019 -- Jul 2023}
 
+    \Role{Team Lead}{Dec 2022 -- Jul 2023}
+    Modernized the legacy product's API, rewriting it with \href{https://tapir.softwaremill.com}{tAPIr} to expose \kw{OpenAPI} docs and enable
+    integrations. Then led the team into the product's core engine for the first time (segmentation analysis): pitched the approach to product
+    \& VPs and ran a swift, productive onboarding.
 
+    \Role{Tech Lead}{Apr 2021 -- Dec 2022}
+    Recruited and onboarded a new team for a greenfield project continuing my IC work, and led it technically: caching proxies for heavy
+    NLP models, a throttler \& dispatcher (built on \kw{akka-streams}) for bottleneck services such as \kw{Elasticsearch}, a data warehouse
+    on \kw{Spark}, \kw{Cassandra}, \kw{Elasticsearch} \& \kw{Kafka}, and a business-logic service on \kw{Postgres}.
 
-    %----------------------------------------------------------------------------------------
-    %	Main
-    %----------------------------------------------------------------------------------------
-    \begin{MainPart}
+    \Role{IC}{Jan 2021 -- Apr 2021}
+    Proposed the architecture and work plan to commercialize a labs POC, and laid the product's foundations together with a DevOps engineer.
 
-        %%% Experiences
-        \MainTitle{\ColorHighlight}{\ColorTextMain}{Experience}
+    \Role{Sr. Backend Engineer}{Jan 2019 -- Jan 2021}
+    On the backend platform team: full \kw{Parquet} support as an alternative to CSV, a modernized telemetry pipeline, a simplified build,
+    a cross-version \kw{Scala} SDK for satellite projects, and most of the PII \& bleaching logic. One of the main reviewers and mentors;
+    advised the labs team on architecture \& design.
 
-        \begin{flushleft}
+    \Role{Additional roles}{2020 -- 2023}
+    Backend Guild Manager \& Guilds Manager: meetups, tech talks, mentoring sessions, and a full-week company-wide \kw{Scala} course
+    delivered by \href{https://ziverge.com/}{Ziverge}. Intern Lead (2022): took an intern with no prior knowledge to all major goals.
 
-            %%%%%%%%%%%%%
-            % Versatile %
-            %%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Aston Capital Management %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \Company{Aston Capital Management}{Apr 2018 -- Dec 2018}
 
-            \large{\textbf{Versatile\hfill{\small\color{\ColorHighlight}Feb 2025 - Present}}}\\\vspace{-.4ex}
-            \small{\color{\ColorHighlight}\hrulefill} \\
-            \normalsize{\color{MainOrange}\textbf{AI Tech Lead}\hfill{\small\color{\ColorHighlight}\textit{Aug 2026 - Present}}}\\
-            \normalsize{Leading all of the company's AI initiatives: agentic coding infrastructure, AI tooling, and \kw{AI cost optimization}.
-                        What started in early 2026 as a side initiative alongside my backend work became a formal role in Aug 2026, including admin access to all AI accounts.
-                        \begin{itemize}
-                            \item Pushed for and built \emph{Van Damme}, a Slack-summoned general-purpose \kw{AI agent} that debugs, analyzes data, opens \& reviews PRs, and assists with anything it's asked to.
-                                  Users pick from several specialized agents, each with its own skills, tools and integrations (GitHub, Jira, Slack, Databricks, HubSpot, Notion, Google Drive, Coralogix, and the company ERP).
-                                  Within months it authored 250+ PRs and reviewed 330+ across 30+ repositories, and became part of everyday work across the company.
-                            \item Introduced \kw{harness engineering}: a five-phase spec-to-ship \kw{agent pipeline} (spec, red tests, code to green, review, verify)
-                                  with per-phase permissions, so no agent grades its own homework. Rolled it out to a handful of key repositories and coached teams to adopt it in their own,
-                                  keeping it in sync across \kw{Claude Code}, \kw{Cursor} \& \kw{OpenCode} through generated configs and a drift-checking pre-push hook.
-                            \item Drove AI cost optimization: a central \kw{LiteLLM} gateway with per-user keys \& cost reporting, routing the grind to cheaper models
-                                  (xAI Grok, valarhq.ai, Bedrock) while keeping frontier models for judgment, and a seat policy across tools.
-                                  On a reference seat, monthly spend dropped almost 10$\times$ while doing more than double the work.
-                            \item Evangelized AI adoption through dedicated Slack channels, tech talks, mentoring, and guidance.
-                        \end{itemize}
-            }\par\vspace{1ex}
-            \normalsize{\color{MainOrange}\textbf{Sr. Backend Engineer}\hfill{\small\color{\ColorHighlight}\textit{Feb 2025 - Present}}}\\
-            \normalsize{Joined the backend team, working on a microservices architecture built mostly on \kw{node.js} (\kw{TypeScript}),
-                        and quickly took ownership of the reporting \& widgets domain. I continue to do hands-on backend work alongside the AI role.
-                        \begin{itemize}
-                            \item Designed and spearheaded the sunset of the legacy reports pipeline, which served Power BI reports to customers as screenshots,
-                                  replacing it with native widgets loaded on demand. The old flow was hacky, yet tightly wired into many parts of the system,
-                                  and triggered PagerDuty alerts almost daily. Seeing this massive refactor through to completion across multiple services took alerts
-                                  from daily to none, retired Power BI entirely, cutting its licensing costs, and enabled live widgets directly in the web app and mobile clients.
-                            \item Created \href{https://github.com/hochgi/test-kit}{\emph{test-kit}} (since open-sourced), an opinionated \kw{component-testing} framework for \kw{TypeScript} services:
-                                  test doubles (mocks \& fakes) paired with probes that fully control them, backed by in-memory \kw{Postgres}, \kw{MySQL}, \kw{Redis}, \kw{S3}, \kw{SQS} \& \kw{Kafka}.
-                                  Grew it into a modular toolkit adopted across the backend, gave an internal talk on it, and wrote the \texttt{/component-testing} agent skill
-                                  that makes proper component testing the easy path for humans and agents alike.
-                        \end{itemize}
-            }\par\vspace{2ex}
+    \Role{Software Architect}{}
+    Forex trading system: \kw{DB schemas}, specs \& formats; an \kw{akka-streams} pipeline exporting large volumes of data to \kw{AWS S3};
+    \kw{REST} APIs for data access; ETL for the data science team; and live data \kw{streaming} \& monitoring.
 
-        \end{flushleft}
+    %%%%%%%%%%%%%%%%%%%
+    % Thomson Reuters %
+    %%%%%%%%%%%%%%%%%%%
+    \Company{Thomson Reuters}{Jun 2012 -- Apr 2018}
 
+    \Role{Software Architect}{Jan 2018 -- Apr 2018}
+    In-house consulting on architecture, design and \kw{data modeling} for teams building on CM-Well.
 
-    \end{MainPart}
+    \Role{Sr. Software Developer}{Jul 2014 -- Jan 2018}
+    Matured CM-Well (built with \kw{Scala}, \kw{akka} \& \kw{Play}) into a standard Thomson Reuters service and an open-source project on GitHub.
 
-    \begin{Footer}
-
-        % Experience continues here at full width, below the sidebar.
-        \begin{flushleft}
-
-            %%%%%%%%%%%
-            % Hunters %
-            %%%%%%%%%%%
-
-            \large{\textbf{Hunters\hfill{\small\color{\ColorHighlight}Aug 2023 - Feb 2025}}}\\\vspace{-.4ex}
-            \small{\color{\ColorHighlight}\hrulefill} \\
-            \normalsize{\color{MainOrange}\textbf{Tech Lead}\hfill{\small\color{\ColorHighlight}\textit{Aug 2023 - Feb 2025}}}\\
-            \normalsize{As a tech lead, I mentored team members and provided technical guidance, focusing on the ingestion \& detection parts of the system.
-                        I played a key role in stabilizing a complex health monitoring system, resolving major \kw{concurrency} issues and cutting health metrics
-                        reporting time from \emph{minutes} to single-digit \emph{milliseconds}; built a live visualization of alerting metrics that significantly
-                        shortened root-cause investigations; introduced \kw{OpenAPI} documentation (via Swagger) with auto-generated client code, keeping APIs and
-                        their consumers aligned; and led a \kw{Spark} version upgrade along with an overhaul of the build \& packaging process.
-                        Along the way, I reduced frequent alerts, resolved logical bugs, and became the technical focal point for multiple \kw{Scala} \& \kw{ZIO} services,
-                        simplifying and documenting them so the team could change them with confidence.
-            } \\\vspace{2ex}
-
-            %%%%%%%%%%%%%%%
-            % SparkBeyond %
-            %%%%%%%%%%%%%%%
-
-            \large{\textbf{SparkBeyond\hfill{\small\color{\ColorHighlight}Jan 2019 - Jul 2023}}}\\\vspace{-.4ex}
-            \small{\color{\ColorHighlight}\hrulefill} \\
-            \normalsize{\color{MainOrange}\textbf{Team Lead}\hfill{\small\color{\ColorHighlight}\textit{Dec 2022 - Jul 2023}}}\\
-            \normalsize{As a team lead working on our legacy project, I pushed for modernizing the product's API. We rewrote the API using
-                        \href{https://tapir.softwaremill.com}{tAPIr}, which enabled us to expose \kw{OpenAPI} documentation (via \href{https://swagger.io/}{Swagger UI}) and paved the way for potential integrations.
-                        Next, we started tackling a more domain-specific problem (segmentation analysis). I had the opportunity to push my own ideas, convince product and VPs,
-                        guide the team through the task, provide motivation, and take care of proper onboarding of the team. It was the first time the team handled the
-                        core engine of the product, and the onboarding was swift and productive. We also continued to juggle regular day-to-day tasks and helped other teams when needed.} \\\vspace{1ex}
-            \normalsize{\color{MainOrange}\textbf{Intern Lead}\hfill{\small\color{\ColorHighlight}\textit{Jun 2022 - Sep 2022}}}\\
-            \normalsize{Managed, mentored, and oversaw the work of a new intern who joined for a limited period of time.
-                        Within that time, I guided the intern's swift learning of the tech stack; as a student with no prior knowledge, the intern had much to learn.
-                        The intern did a fantastic job and checked off all the major goals we had set.} \\\vspace{1ex}
-            \normalsize{\color{MainOrange}\textbf{Tech Lead}\hfill{\small\color{\ColorHighlight}\textit{Apr 2021 - Dec 2022}}}\\
-            \normalsize{I was responsible for forming a new team for a greenfield project: interviewing, recruiting, and onboarding the team.
-                        I then served as the team's tech lead, working closely with the new team lead.
-                        The team's work was a direct continuation of the project I had been working on as an IC prior to forming the team. We added many services:
-                        caching proxies for heavy NLP models, a throttler \& dispatcher (built on \kw{akka-streams}) for bottleneck services such as \kw{Elasticsearch},
-                        a data warehouse (built on top of \kw{Spark}, \kw{Cassandra}, \kw{Elasticsearch}, and \kw{Kafka}), a business logic backend service with a dedicated \kw{Postgres} DB, and more.} \\\vspace{1ex}
-            \normalsize{\color{MainOrange}\textbf{IC}\hfill{\small\color{\ColorHighlight}\textit{Jan 2021 - Apr 2021}}}\\
-            \normalsize{I was asked to look into a POC developed in the labs, with the intent to commercialize it. I proposed an architecture with design documents and presented a workflow plan.
-                        Together with a DevOps engineer, we started executing it and laid the foundations for the product.} \\\vspace{1ex}
-            \normalsize{\color{MainOrange}\textbf{Guilds Manager}\hfill{\small\color{\ColorHighlight}\textit{Sep 2020 - Jul 2023}}}\\
-            \normalsize{Orchestrated all guild events, helping the guild managers with the ``meta subjects'' of guild management.} \\\vspace{1ex}
-            \normalsize{\color{MainOrange}\textbf{Backend Guild Manager}\hfill{\small\color{\ColorHighlight}\textit{Mar 2020 - Jul 2023}}}\\
-            \normalsize{As the backend guild manager, I was responsible for organizing meetups, tech talks, and mentoring sessions.
-                        I also pushed for and organized a full-week, company-wide \kw{Scala} course with content tailored to SparkBeyond's needs.
-                        The course was delivered by \href{https://ziverge.com/}{Ziverge} exclusively to SparkBeyond.} \\\vspace{1ex}
-            \normalsize{\color{MainOrange}\textbf{Sr. Backend Engineer}\hfill{\small\color{\ColorHighlight}\textit{Jan 2019 - Jan 2021}}} \\
-            \normalsize{As part of the backend platform team, I pushed for and delivered a number of projects. Among them: full support for
-                        \kw{Parquet} as a valid alternative to CSV; rebuilding and modernizing large parts of the telemetry pipeline; simplifying much
-                        of the over-complicated build logic; and adding a cross-version \kw{Scala} SDK as a regular library for satellite projects.
-                        I also oversaw and implemented most of the PII \& bleaching logic, and advised the labs team on architecture \& design. \\
-                        I served as one of the main reviewers and often helped others through reviews \& mentoring.} \\\vspace{2ex}
-
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            % Aston Capital Management %
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-            \large{\textbf{Aston Capital Management\hfill{\small\color{\ColorHighlight}Apr 2018 - Dec 2018}}}\\\vspace{-.4ex}
-            \small{\color{\ColorHighlight}\hrulefill} \\
-            \normalsize{\color{MainOrange}\textbf{Software Architect}\hfill{\small\color{\ColorHighlight}\textit{Apr 2018 - Dec 2018}}}\\
-            \normalsize{Developed a trading system in the forex domain. My responsibilities included defining \kw{DB schemas}, specs \& formats;
-                        systemic improvements; designing \& building an \kw{akka-streams} pipeline that exports vast amounts of data to \kw{AWS S3};
-                        providing \kw{REST} APIs for convenient data fetching; ETL processes that convert the raw data into any form the data science team needed;
-                        and live \kw{streaming} of the data (backend pipeline \& live monitoring).} \\\vspace{2ex}
-
-
-            %%%%%%%%%%%%%%%%%%%
-            % Thomson Reuters %
-            %%%%%%%%%%%%%%%%%%%
-
-            \large{\textbf{Thomson Reuters\hfill{\small\color{\ColorHighlight}Jun 2012 - Apr 2018}}}\\\vspace{-.4ex}
-            \small{\color{\ColorHighlight}\hrulefill} \\
-            \normalsize{\color{MainOrange}\textbf{Software Architect}\hfill{\small\color{\ColorHighlight}\textit{Jan 2018 - Apr 2018}}}\\
-            \normalsize{Worked on CM-Well development. Provided in-house consulting on how best to utilize the CM-Well service,
-                        specifically on matters related to architecture \& design decisions of software and \kw{data modeling}.} \\\vspace{1ex}
-            \normalsize{\color{MainOrange}\textbf{Sr. Software Developer}\hfill{\small\color{\ColorHighlight}\textit{Jul 2014 - Jan 2018}}}\\
-            \normalsize{Worked on the CM-Well project (built with \kw{Scala}, \kw{akka} \& \kw{Play}), maturing it and getting it past the barrier to become a standard service in Thomson Reuters infrastructure and an open-source project on GitHub.} \\\vspace{1ex}
-            \normalsize{\color{MainOrange}\textbf{Software Developer (contractor)}\hfill{\small\color{\ColorHighlight}\textit{Jul 2012 - Jul 2014}}}\\
-            \normalsize{Worked on a project named CM-Well and handled web service APIs, backend refactoring to a new architecture,
-                        some client-side JavaScript touch-ups, and rewriting the build to use \kw{sbt} instead of Maven.} \\\vspace{2ex}
-
-        \end{flushleft}
-
-        %%% Education
-        \MainTitle{\ColorHighlight}{\ColorTextMain}{Education}
-        \Experience
-            {\ColorHighlight}
-            {Graduate studies in Computer Science (M.Sc. track)}
-            {Bar-Ilan University}
-            {Sep 2012 - Jan 2015}
-            {
-                Graduate coursework toward an M.Sc. (degree not completed). Area of study: Algorithms, Data structures \& Complexity.
-            }
-        \Experience
-            {\ColorHighlight}
-            {B.Sc. in Computer Science}
-            {Bar-Ilan University}
-            {Sep 2009 - Jun 2012}
-            {
-                Was accepted into the Microsoft Excellence Program and received a scholarship. Participated in the RoboCup project: the Bar-Ilan University RoboCup Soccer Team (BURST) was founded in 2009 and was the first team from Israel to compete in the RoboCup senior league. The team consisted of a few selected undergraduate students \& researchers.
-            }
-        \Experience
-            {\ColorHighlight}
-            {Microsoft Excellence Program}
-            {Microsoft R\&D Center, Herzliya}
-            {Sep 2009 - Jun 2012}
-            {
-                Participated in the program led by Microsoft and attended enrichment courses on various topics, e.g.: \\
-                \scriptsize{.NET environment \& C\#, XNA, Kinect SDK, Mobile (Windows Phone) Development, Azure \& Big Data}
-            }
-
-
-        \begin{flushleft}
-            \normalsize{\color{MidGrey}\textbf{3D Animation course\hfill{\small\color{\ColorHighlight}Apr 2006 - May 2007}}}\\\vspace{-.4ex}
-            \ssmall{\color{\ColorHighlight}\hrulefill}
-            \small{\color{MidGrey}\textbf{Adventure Publishing Corp.}}\\
-            \small{\color{MidGrey}A year-long course in 3D \& animation studies (modeling, texturing, rigging, animating).} \\
-        \end{flushleft}
-
-    \end{Footer}
-
+    \Role{Software Developer (contractor)}{Jul 2012 -- Jul 2014}
+    Web service APIs, backend refactoring to a new architecture, and migrating the build from Maven to \kw{sbt}.
 
 \end{document}
-
-
