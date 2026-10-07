@@ -5,6 +5,9 @@
 % Adapted from Spider CV v1.1 (08/10/22) by ROMAINPC,
 % with the spider chart and other unused widgets removed.
 %
+% A4 layout: the text flows normally over framed pages, opened by a filled top
+% bar on page 1 and closed by a matching footer bar on the last page.
+%
 % Spider CV was:
 % Inspired by developercv (Jan Vorisek)
 % Inspired by developercv Doji variant (Stijn Dejongh)
@@ -97,142 +100,123 @@
 
 \newlength\margin
 \setlength\margin{0.15cm}
-% Page height = \mainheight + \footerheight; tune both when the content changes.
-% \mainheight: the sidebar (and the main column next to it) ends here; the
-%              full-width footer area starts right below it.
-% \footerheight: height of the full-width area below the sidebar.
-\newlength\mainheight
-\setlength\mainheight{26.4cm}
-\newlength\footerheight
-\setlength\footerheight{38.3cm}
-\newlength\cvpaperheight
-\setlength\cvpaperheight{\mainheight+\footerheight}
-\usepackage[margin=\margin,noheadfoot,a4paper, paperheight=\cvpaperheight]{geometry}
-\newlength\sidewidth
-\setlength\sidewidth{0.25\paperwidth-2\margin}
-\newlength\mainwidth
-\setlength\mainwidth{\paperwidth-6\margin-\sidewidth}
 \newlength\anglesize
 \setlength\anglesize{0.25cm}
-\newlength\topheight
-\setlength\topheight{\sidewidth+0.75cm}
-\newlength\profilesize
-\setlength\profilesize{\sidewidth-2\margin}
+\newlength\pagemargin
+\setlength\pagemargin{5\margin}
 
-\newlength\sidebarbottom
-\setlength\sidebarbottom{-\mainheight}
+% Heights of the top bar (page 1: name, about, contact) and the footer bar
+% (last page: blog, talks, open source). Tune when their content changes.
+\newlength\topbarheight
+\setlength\topbarheight{5.6cm}
+\newlength\footbarheight
+\setlength\footbarheight{4.2cm}
+\newlength\footbarpad
+\setlength\footbarpad{0.25cm}
 
-% Sidebar content is stretched to fill the whole tan area:
-% use \vspace{... plus 1fill} between sidebar sections.
-\newlength\sidebarheight
-\setlength\sidebarheight{\mainheight-\topheight-3\margin+0.4cm-0.3cm}
+\usepackage[a4paper, margin=\pagemargin, noheadfoot]{geometry}
 
-\newlength\footerwidth
-\setlength\footerwidth{\paperwidth-6\margin}
+% Where the bands end, measured from the top / bottom paper edge.
+\newlength\topbandbottom
+\setlength\topbandbottom{\pagemargin+\topbarheight+2\margin}
+\newlength\footbandtop
+\setlength\footbandtop{0.5\margin+\footbarheight+2\footbarpad}
 
 %----------------------------------------------------------------------------------------
 %	MAIN SECTIONS
 %----------------------------------------------------------------------------------------
+% The text flows normally over the pages. Behind it, every page gets a frame
+% with angled corners; page 1 also gets the filled top bar, and the last page
+% the filled footer bar.
 
 \usepackage{ragged2e}
-\usepackage[absolute,overlay]{textpos} % option needed to use absolute positionning and to have text on front
+\usetikzlibrary{shapes,decorations}
 
-\newenvironment{SideBar}[2]{% Background color, Text color
-    \begin{tikzpicture}[remember picture,overlay]% put text anywhere
+% Page that holds the footer bar, recorded by FooterBar in the previous LaTeX
+% pass (build.sh runs two passes).
+\providecommand{\cvlastpage}{0}
 
-        % \fill[fill=VeryLightOrange, shift={(current page.north west)}];
-        
-        \draw[draw=#1, fill=VeryLightOrange, shift={(current page.north west)}, very thick]
-            (0.5\margin,\sidebarbottom) --
+\newlength\frametop
+\newlength\framebottom
+\AddToHook{shipout/background}{%
+    \ifnum\value{page}=1 \setlength\frametop{\topbandbottom+\margin}\else\setlength\frametop{0.5\margin}\fi
+    \ifnum\value{page}=\cvlastpage\relax \setlength\framebottom{\footbandtop+\margin}\else\setlength\framebottom{0.5\margin}\fi
+    \put(0,0){\begin{tikzpicture}[overlay]
+        % main frame
+        \draw[draw=\ColorBackground, very thick]
+            (0.5\margin+\anglesize,-\frametop) --
+            (\paperwidth-0.5\margin-\anglesize,-\frametop) --
+            (\paperwidth-0.5\margin,-\frametop-\anglesize) --
+            (\paperwidth-0.5\margin,-\paperheight+\framebottom+\anglesize) --
+            (\paperwidth-0.5\margin-\anglesize,-\paperheight+\framebottom) --
+            (0.5\margin,-\paperheight+\framebottom) --
+            (0.5\margin,-\frametop-\anglesize) --
+            cycle;
+        % top bar
+        \ifnum\value{page}=1
+        \draw[draw=\ColorBackground, fill=VeryLightOrange, very thick]
             (0.5\margin,-0.5\margin) --
             (\paperwidth-0.5\margin,-0.5\margin) --
-            (\paperwidth-0.5\margin,-\topheight-2\margin) --
-            (\sidewidth+2\margin+\anglesize,-\topheight-2\margin) --
-            (\sidewidth+2\margin,-\topheight-2\margin-\anglesize) --
-            (\sidewidth+2\margin,\sidebarbottom+\anglesize) --
-            (\sidewidth+2\margin-\anglesize,\sidebarbottom) --
+            (\paperwidth-0.5\margin,-\topbandbottom+\anglesize) --
+            (\paperwidth-0.5\margin-\anglesize,-\topbandbottom) --
+            (0.5\margin+\anglesize,-\topbandbottom) --
+            (0.5\margin,-\topbandbottom+\anglesize) --
             cycle;
-        \draw [draw=#1, shift={(current page.north west)}, very thick]
-            (\paperwidth-0.5\margin-\anglesize,-\topheight-3\margin) --
-            (\paperwidth-0.5\margin,-\topheight-3\margin-\anglesize) --
-            (\paperwidth-0.5\margin,-\paperheight+0.5\margin+\anglesize) --
-            (\paperwidth-0.5\margin-\anglesize,-\paperheight+0.5\margin) --
+        \fi
+        % footer bar
+        \ifnum\value{page}=\cvlastpage\relax
+        \draw[draw=\ColorBackground, fill=VeryLightOrange, very thick]
+            (0.5\margin+\anglesize,-\paperheight+\footbandtop) --
+            (\paperwidth-0.5\margin-\anglesize,-\paperheight+\footbandtop) --
+            (\paperwidth-0.5\margin,-\paperheight+\footbandtop-\anglesize) --
+            (\paperwidth-0.5\margin,-\paperheight+0.5\margin) --
             (0.5\margin,-\paperheight+0.5\margin) --
-            (0.5\margin,\sidebarbottom-\margin-\anglesize) --
-            (0.5\margin+\anglesize,\sidebarbottom-\margin);
-    \end{tikzpicture}%
-    %%%%%%%%%%%%%
-    % \TPmargin{}{}
-    \begin{textblock*}{\sidewidth}(\margin,\topheight + 3\margin -0.4cm)
-    \begin{minipage}[t][\sidebarheight][s]{\sidewidth}
-    \begin{center}
-    \color{#2}
-}{
-    \end{center}
-    \end{minipage}
-    \end{textblock*}
+            (0.5\margin,-\paperheight+\footbandtop-\anglesize) --
+            cycle;
+        \fi
+    \end{tikzpicture}}%
 }
 
-
-\newenvironment{TopBar}[1]{ % Text color
-    \begin{textblock*}{\mainwidth}(\sidewidth+3\margin,\margin-0.4cm)
+% Top bar contents, at the very top of page 1.
+\newenvironment{TopBar}[1]{% Text color
+    \noindent\begin{minipage}[t][\topbarheight][t]{\linewidth}
     \begin{center}
     \color{#1}
 }{
     \end{center}
-    \end{textblock*}
+    \end{minipage}\par
+    \vspace{5\margin}
 }
 
-
-\newenvironment{MainPart}{
-    \begin{textblock*}{\mainwidth}(\sidewidth+4\margin,\topheight+2\margin)
-    \begin{center}
+% Footer bar contents, pinned inside the footer bar of the last page. The
+% strut reserves its height, so the text above can never run into it.
+\newenvironment{FooterBar}{%
+    \par\noindent\rule{0pt}{\footbandtop+2\margin-\pagemargin}%
+    \protected@write\@auxout{}{\gdef\string\cvlastpage{\thepage}}%
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south west, inner sep=0]
+            at ([xshift=\pagemargin, yshift=0.5\margin+\footbarpad]current page.south west)
+            \bgroup\begin{minipage}[b][\footbarheight][c]{\textwidth}
 }{
-    \end{center}
-    \end{textblock*}
-}
-
-\newenvironment{Footer}{
-    \begin{textblock*}{\footerwidth}(3\margin, -\sidebarbottom+2\margin)
-    \begin{center}
-}{
-    \end{center}
-    \end{textblock*}
+            \end{minipage}\egroup;
+    \end{tikzpicture}\par
 }
 
 
-\usetikzlibrary{shapes,decorations}
-
-%%%%%%% Picture
-\newcommand{\DefineProfile}[3]% Background color, Highlight color, Img path
-{   
-    \begin{tikzpicture}[remember picture,overlay]
-        % \node [rectangle, draw=SecondaryOrange, rounded corners=0.5mm, very thick,
-        % shift={(current page.north west)}, xshift=\anglesize, yshift=-\anglesize,
-        % ](s1){};
-        % \node [rectangle, draw=SecondaryOrange, rounded corners=0.5mm, very thick,
-        % shift={(current page.north west)}, xshift=(\sidewidth+2\margin), yshift=-(\sidewidth+2\margin),
-        % ](s2){};
-        % \draw [draw=SecondaryOrange, very thick]
-        % (s1) -- (s2);
-        %%%%%%%%%%%%%%%
-        \def\backcolor{\ifx\PM\undefined#1\else LightGrey\fi}
-        \node[
-            shift={(current page.north west)},
-            xshift=(\sidewidth+2\margin)/2,
-            yshift=-(\sidewidth+2\margin)/2,
-            chamfered rectangle, draw=SecondaryOrange, very thick,
-          minimum size=\profilesize,
-          fill=\backcolor,
-          path picture={
-            \node at (path picture bounding box.center){
-            \includegraphics[height=\profilesize]{#3}
-            };
-          }]
-          {};
-      \end{tikzpicture}
+% \FooterColumn{title}{items}{note}: one footer column. The items sit in a
+% fixed-height box, so the notes start at the same height in every column.
+\newlength\footitemsheight
+\setlength\footitemsheight{4.2\baselineskip}
+\newcommand{\FooterColumn}[3]{%
+    \begin{minipage}[t]{(\linewidth-8mm)/3}
+        \raggedright
+        \TextSeparatorBis{\ColorHighlight}{\faCaretRight \hspace{1pt} #1}{}\par
+        \vspace{1.5ex}
+        \parbox[t][\footitemsheight][t]{\linewidth}{\raggedright #2}\par
+        \vspace{0.8ex}
+        {\footnotesize\color{MidGrey}#3}
+    \end{minipage}%
 }
-
 
 
 %----------------------------------------------------------------------------------------
@@ -318,4 +302,17 @@
 }{
     \end{center}
     \end{minipage}\\\vspace*{0.15cm}
+}
+
+%%% Experience entries (same look as the hand-written entries they replace)
+% \Company{name}{dates}
+\newcommand{\Company}[2]{%
+    \par\addvspace{2ex}%
+    {\large\textbf{#1\hfill{\small\color{\ColorHighlight}#2}}}\par\vspace{-.4ex}%
+    {\small\color{\ColorHighlight}\hrulefill}\par\nopagebreak
+}
+% \Role{title}{dates}
+\newcommand{\Role}[2]{%
+    \par\addvspace{1ex}%
+    {\color{MainOrange}\textbf{#1}\hfill{\small\color{\ColorHighlight}\textit{#2}}}\par\nopagebreak
 }
