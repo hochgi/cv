@@ -110,7 +110,7 @@
 \newlength\topbarheight
 \setlength\topbarheight{5.6cm}
 \newlength\footbarheight
-\setlength\footbarheight{4.2cm}
+\setlength\footbarheight{4.0cm}
 \newlength\footbarpad
 \setlength\footbarpad{0.25cm}
 
@@ -252,6 +252,7 @@
 \def\hrulefill{\leavevmode\leaders\hrule height 0.35mm\hfill\kern\z@} % ~ very thick
 %%%%%%% Experience
 \newcommand{\Experience}[5]{%Highlight color,  Ttile, Left subtitle, Right subtitle, Description
+    \setlength\topsep{0.6ex}%
     \begin{flushleft}
         \large{\textbf{#2\hfill{\small\color{#1}#4}}}\\\vspace{-.4ex}
         \small{{\color{#1}\hrulefill}
