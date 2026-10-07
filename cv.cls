@@ -110,7 +110,7 @@
 \newlength\topbarheight
 \setlength\topbarheight{5.6cm}
 \newlength\footbarheight
-\setlength\footbarheight{3.7cm}
+\setlength\footbarheight{4.2cm}
 \newlength\footbarpad
 \setlength\footbarpad{0.25cm}
 
@@ -132,9 +132,9 @@
 \usepackage{ragged2e}
 \usetikzlibrary{shapes,decorations}
 
-% Last page number, from the previous LaTeX pass (build.sh runs two passes).
+% Page that holds the footer bar, recorded by FooterBar in the previous LaTeX
+% pass (build.sh runs two passes).
 \providecommand{\cvlastpage}{0}
-\AtEndDocument{\immediate\write\@auxout{\gdef\string\cvlastpage{\thepage}}}
 
 \newlength\frametop
 \newlength\framebottom
@@ -192,6 +192,7 @@
 % strut reserves its height, so the text above can never run into it.
 \newenvironment{FooterBar}{%
     \par\noindent\rule{0pt}{\footbandtop+2\margin-\pagemargin}%
+    \protected@write\@auxout{}{\gdef\string\cvlastpage{\thepage}}%
     \begin{tikzpicture}[remember picture, overlay]
         \node[anchor=south west, inner sep=0]
             at ([xshift=\pagemargin, yshift=0.5\margin+\footbarpad]current page.south west)
@@ -199,6 +200,22 @@
 }{
             \end{minipage}\egroup;
     \end{tikzpicture}\par
+}
+
+
+% \FooterColumn{title}{items}{note}: one footer column. The items sit in a
+% fixed-height box, so the notes start at the same height in every column.
+\newlength\footitemsheight
+\setlength\footitemsheight{4.2\baselineskip}
+\newcommand{\FooterColumn}[3]{%
+    \begin{minipage}[t]{(\linewidth-8mm)/3}
+        \raggedright
+        \TextSeparatorBis{\ColorHighlight}{\faCaretRight \hspace{1pt} #1}{}\par
+        \vspace{1.5ex}
+        \parbox[t][\footitemsheight][t]{\linewidth}{\raggedright #2}\par
+        \vspace{0.8ex}
+        {\footnotesize\color{MidGrey}#3}
+    \end{minipage}%
 }
 
 
