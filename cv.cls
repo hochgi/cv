@@ -5,11 +5,8 @@
 % Adapted from Spider CV v1.1 (08/10/22) by ROMAINPC,
 % with the spider chart and other unused widgets removed.
 %
-% A4 layout:
-%   page 1  - top bar across the page, a sidebar on the left, the main column
-%             next to it, and a full-width footer area below the sidebar
-%             (all absolutely positioned);
-%   page 2+ - a framed page where the text flows normally (\NextPages).
+% A4 layout: the text flows normally over framed pages, opened by a filled top
+% bar on page 1 and closed by a matching footer bar on the last page.
 %
 % Spider CV was:
 % Inspired by developercv (Jan Vorisek)
@@ -105,128 +102,104 @@
 \setlength\margin{0.15cm}
 \newlength\anglesize
 \setlength\anglesize{0.25cm}
-% Height of the top bar (name, about, contact).
-\newlength\topheight
-\setlength\topheight{5.9cm}
-% Distance from the top of page 1 to the bottom of the sidebar; the full-width
-% footer area starts right below it. Tune when the content changes.
-\newlength\mainheight
-\setlength\mainheight{24.7cm}
+\newlength\pagemargin
+\setlength\pagemargin{5\margin}
 
-% Page 2+ text area, inside the frame.
-\usepackage[a4paper, hmargin=5\margin, vmargin=6\margin, noheadfoot]{geometry}
+% Heights of the top bar (page 1: name, about, contact) and the footer bar
+% (last page: blog, talks, open source). Tune when their content changes.
+\newlength\topbarheight
+\setlength\topbarheight{5.6cm}
+\newlength\footbarheight
+\setlength\footbarheight{3.7cm}
+\newlength\footbarpad
+\setlength\footbarpad{0.25cm}
 
-\newlength\sidewidth
-\setlength\sidewidth{0.25\paperwidth-2\margin}
-\newlength\mainwidth
-\setlength\mainwidth{\paperwidth-6\margin-\sidewidth}
+\usepackage[a4paper, margin=\pagemargin, noheadfoot]{geometry}
 
-\newlength\sidebarbottom
-\setlength\sidebarbottom{-\mainheight}
-
-% Sidebar content is stretched to fill the whole tan area:
-% use \vspace{... plus 1fill} between sidebar sections.
-\newlength\sidebarheight
-\setlength\sidebarheight{\mainheight-\topheight-3\margin+0.4cm-0.3cm}
-
-\newlength\footerwidth
-\setlength\footerwidth{\paperwidth-6\margin}
+% Where the bands end, measured from the top / bottom paper edge.
+\newlength\topbandbottom
+\setlength\topbandbottom{\pagemargin+\topbarheight+2\margin}
+\newlength\footbandtop
+\setlength\footbandtop{0.5\margin+\footbarheight+2\footbarpad}
 
 %----------------------------------------------------------------------------------------
 %	MAIN SECTIONS
 %----------------------------------------------------------------------------------------
+% The text flows normally over the pages. Behind it, every page gets a frame
+% with angled corners; page 1 also gets the filled top bar, and the last page
+% the filled footer bar.
 
 \usepackage{ragged2e}
-\usepackage[absolute,overlay]{textpos} % option needed to use absolute positionning and to have text on front
+\usetikzlibrary{shapes,decorations}
 
-\newenvironment{SideBar}[2]{% Background color, Text color
-    \begin{tikzpicture}[remember picture,overlay]% put text anywhere
+% Last page number, from the previous LaTeX pass (build.sh runs two passes).
+\providecommand{\cvlastpage}{0}
+\AtEndDocument{\immediate\write\@auxout{\gdef\string\cvlastpage{\thepage}}}
 
-        % \fill[fill=VeryLightOrange, shift={(current page.north west)}];
-        
-        \draw[draw=#1, fill=VeryLightOrange, shift={(current page.north west)}, very thick]
-            (0.5\margin,\sidebarbottom) --
+\newlength\frametop
+\newlength\framebottom
+\AddToHook{shipout/background}{%
+    \ifnum\value{page}=1 \setlength\frametop{\topbandbottom+\margin}\else\setlength\frametop{0.5\margin}\fi
+    \ifnum\value{page}=\cvlastpage\relax \setlength\framebottom{\footbandtop+\margin}\else\setlength\framebottom{0.5\margin}\fi
+    \put(0,0){\begin{tikzpicture}[overlay]
+        % main frame
+        \draw[draw=\ColorBackground, very thick]
+            (0.5\margin+\anglesize,-\frametop) --
+            (\paperwidth-0.5\margin-\anglesize,-\frametop) --
+            (\paperwidth-0.5\margin,-\frametop-\anglesize) --
+            (\paperwidth-0.5\margin,-\paperheight+\framebottom+\anglesize) --
+            (\paperwidth-0.5\margin-\anglesize,-\paperheight+\framebottom) --
+            (0.5\margin,-\paperheight+\framebottom) --
+            (0.5\margin,-\frametop-\anglesize) --
+            cycle;
+        % top bar
+        \ifnum\value{page}=1
+        \draw[draw=\ColorBackground, fill=VeryLightOrange, very thick]
             (0.5\margin,-0.5\margin) --
             (\paperwidth-0.5\margin,-0.5\margin) --
-            (\paperwidth-0.5\margin,-\topheight-2\margin) --
-            (\sidewidth+2\margin+\anglesize,-\topheight-2\margin) --
-            (\sidewidth+2\margin,-\topheight-2\margin-\anglesize) --
-            (\sidewidth+2\margin,\sidebarbottom+\anglesize) --
-            (\sidewidth+2\margin-\anglesize,\sidebarbottom) --
+            (\paperwidth-0.5\margin,-\topbandbottom+\anglesize) --
+            (\paperwidth-0.5\margin-\anglesize,-\topbandbottom) --
+            (0.5\margin+\anglesize,-\topbandbottom) --
+            (0.5\margin,-\topbandbottom+\anglesize) --
             cycle;
-        \draw [draw=#1, shift={(current page.north west)}, very thick]
-            (\paperwidth-0.5\margin-\anglesize,-\topheight-3\margin) --
-            (\paperwidth-0.5\margin,-\topheight-3\margin-\anglesize) --
-            (\paperwidth-0.5\margin,-\paperheight+0.5\margin+\anglesize) --
-            (\paperwidth-0.5\margin-\anglesize,-\paperheight+0.5\margin) --
+        \fi
+        % footer bar
+        \ifnum\value{page}=\cvlastpage\relax
+        \draw[draw=\ColorBackground, fill=VeryLightOrange, very thick]
+            (0.5\margin+\anglesize,-\paperheight+\footbandtop) --
+            (\paperwidth-0.5\margin-\anglesize,-\paperheight+\footbandtop) --
+            (\paperwidth-0.5\margin,-\paperheight+\footbandtop-\anglesize) --
+            (\paperwidth-0.5\margin,-\paperheight+0.5\margin) --
             (0.5\margin,-\paperheight+0.5\margin) --
-            (0.5\margin,\sidebarbottom-\margin-\anglesize) --
-            (0.5\margin+\anglesize,\sidebarbottom-\margin);
-    \end{tikzpicture}%
-    %%%%%%%%%%%%%
-    % \TPmargin{}{}
-    \begin{textblock*}{\sidewidth}(\margin,\topheight + 3\margin -0.4cm)
-    \begin{minipage}[t][\sidebarheight][s]{\sidewidth}
-    \begin{center}
-    \color{#2}
-}{
-    \end{center}
-    \end{minipage}
-    \end{textblock*}
+            (0.5\margin,-\paperheight+\footbandtop-\anglesize) --
+            cycle;
+        \fi
+    \end{tikzpicture}}%
 }
 
-
-\newenvironment{TopBar}[1]{ % Text color
-    \begin{textblock*}{\footerwidth}(3\margin,\margin-0.15cm)
+% Top bar contents, at the very top of page 1.
+\newenvironment{TopBar}[1]{% Text color
+    \noindent\begin{minipage}[t][\topbarheight][t]{\linewidth}
     \begin{center}
     \color{#1}
 }{
     \end{center}
-    \end{textblock*}
+    \end{minipage}\par
+    \vspace{5\margin}
 }
 
-
-\newenvironment{MainPart}{
-    \begin{textblock*}{\mainwidth}(\sidewidth+4\margin,\topheight+2\margin)
-    \begin{center}
+% Footer bar contents, pinned inside the footer bar of the last page. The
+% strut reserves its height, so the text above can never run into it.
+\newenvironment{FooterBar}{%
+    \par\noindent\rule{0pt}{\footbandtop+2\margin-\pagemargin}%
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south west, inner sep=0]
+            at ([xshift=\pagemargin, yshift=0.5\margin+\footbarpad]current page.south west)
+            \bgroup\begin{minipage}[b][\footbarheight][c]{\textwidth}
 }{
-    \end{center}
-    \end{textblock*}
+            \end{minipage}\egroup;
+    \end{tikzpicture}\par
 }
-
-\newenvironment{Footer}{
-    \begin{textblock*}{\footerwidth}(3\margin, -\sidebarbottom+2\margin)
-    \begin{center}
-}{
-    \end{center}
-    \end{textblock*}
-}
-
-
-\usetikzlibrary{shapes,decorations}
-
-%%%%%%% Pages 2+
-% Frame with angled corners, drawn behind every page after the first.
-\AddToHook{shipout/background}{%
-    \ifnum\value{page}>1
-        \put(0,0){\begin{tikzpicture}[overlay]
-            \draw[draw=\ColorBackground, very thick]
-                (0.5\margin+\anglesize,-0.5\margin) --
-                (\paperwidth-0.5\margin-\anglesize,-0.5\margin) --
-                (\paperwidth-0.5\margin,-0.5\margin-\anglesize) --
-                (\paperwidth-0.5\margin,-\paperheight+0.5\margin+\anglesize) --
-                (\paperwidth-0.5\margin-\anglesize,-\paperheight+0.5\margin) --
-                (0.5\margin,-\paperheight+0.5\margin) --
-                (0.5\margin,-0.5\margin-\anglesize) --
-                cycle;
-        \end{tikzpicture}}%
-    \fi
-}
-
-% Ends page 1 (all of it absolutely positioned); the text after it flows
-% normally inside the framed pages.
-\newcommand{\NextPages}{\null\clearpage}
-
 
 
 %----------------------------------------------------------------------------------------
